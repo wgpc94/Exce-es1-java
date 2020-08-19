@@ -33,27 +33,15 @@ public class Progama {
 			System.out.println("Data de saida: ");
 			saidaD = sdf.parse(entrada.next());
 			
-			Date agora = new Date();
-			
-			if (entradaD.before(agora) || saidaD.before(agora) ) {
-				System.out.println("Error as datas devem ser futuras: ");
-			}
-			else if(!saidaD.after(entradaD)) {
-				System.out.println("Error -data de saida anterior a data de entrada");
-				
+			String error = reserva.AtualizaçãoDuração(entradaD, saidaD);
+			if (error != null) {
+				System.out.println(error);
 			}
 			else {
-				reserva.AtualizaçãoDuração(entradaD, saidaD);
-				System.out.println("Reserva: "+reserva);
+				System.out.println(reserva);
 			}
-				
-			
 		}
 
-		
-		
-		
-		
 		entrada.close();
 	}
 
