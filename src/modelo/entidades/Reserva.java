@@ -4,20 +4,26 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+
+import modelo.exceções.DominioExceções;
+
 public class Reserva {
 	private Integer numeroQuarto;
-	private Date entrada;
-	private Date saida;
+	private Date entradaD;
+	private Date saidaD;
 	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	
 	public Reserva() {
 	}
 
-	public Reserva(Integer numeroQuarto, Date entrada, Date saida) {
+	public Reserva(Integer numeroQuarto, Date entradaD, Date saidaD) throws DominioExceções {
+		if(!saidaD.after(entradaD)) {
+			throw new DominioExceções("Error -data de saida anterior a data de entrada");
+			}
 		this.numeroQuarto = numeroQuarto;
-		this.entrada = entrada;
-		this.saida = saida;
+		this.entradaD = entradaD;
+		this.saidaD = saidaD;
 	}
 
 	public Integer getNumeroQuarto() {
@@ -29,32 +35,30 @@ public class Reserva {
 	}
 
 	public Date getEntrada() {
-		return entrada;
+		return entradaD;
 	}
 
 	public Date getSaida() {
-		return saida;
+		return saidaD;
 	}
 
 	public long Duração() {
 	
-		long diferença = saida.getTime() - entrada.getTime();
+		long diferença = saidaD.getTime() - entradaD.getTime();
 		return TimeUnit.DAYS.convert(diferença, TimeUnit.MILLISECONDS);
 	}
 	
-	public String AtualizaçãoDuração(Date entradaD, Date saidaD) {
+	public void AtualizaçãoDuração(Date entradaD, Date saidaD) throws DominioExceções {
 		Date agora = new Date();
-		
 		if (entradaD.before(agora) || saidaD.before(agora) ) {
-			return "Error as datas devem ser futuras: ";
+			throw new DominioExceções("Error as datas devem ser futuras: ");
 		}
 		if(!saidaD.after(entradaD)) {
-			return "Error -data de saida anterior a data de entrada";
+			throw new DominioExceções("Error -data de saida anterior a data de entrada");
 			}
 		else {
-				this.entrada = entradaD;
-				this.saida = saidaD;
-				return null;
+				this.entradaD = entradaD;
+				this.saidaD = saidaD;
 			}
 	}
 
@@ -63,9 +67,9 @@ public class Reserva {
 		return "Quarto: "
 				+numeroQuarto
 				+", Entrada: "
-				+ sdf.format(entrada)
+				+ sdf.format(entradaD)
 				+", Saida: "
-				+sdf.format(saida)
+				+sdf.format(saidaD)
 				+", Duração: "
 				+Duração()
 				+", Noites";
